@@ -6,5 +6,5 @@ It is an automatic call recorder and has following features :
 3.	Displays the dates and call recording logs under each date.
 4.	Displays the contact names as saved by user in phone contacts.
 5.	On clicking the particular contact ,user has option to chose which media player to play it on. 
-6.	Has a button to turn the recorder on/off.
+6.	Has a switch to turn the recorder on/off.
 7.	Runtime permissions implemented.

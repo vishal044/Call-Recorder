@@ -62,6 +62,8 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
                     intent.setDataAndType(Uri.fromFile(file), "audio/*");
                     context.startActivity(intent);
 
+                    pref.edit().putBoolean("pauseStateVLC",true).apply();
+
                     /*FileInputStream fis=null;
                     MediaPlayer mp=new MediaPlayer();
                     try {

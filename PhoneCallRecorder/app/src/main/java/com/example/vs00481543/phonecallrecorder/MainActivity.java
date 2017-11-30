@@ -2,6 +2,7 @@ package com.example.vs00481543.phonecallrecorder;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.StrictMode;
@@ -13,10 +14,12 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     RecordAdapter rAdapter;
     RecyclerView recycler;
     List<CallDetails> callDetailsList;
-    boolean checkResume;
+    boolean checkResume=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-
 
         SharedPreferences pref= PreferenceManager.getDefaultSharedPreferences(this);
         pref.edit().putInt("numOfCalls",0).apply();
@@ -53,20 +55,55 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.e("Check", "onResume: ");
         if(checkPermission()) {
             Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_LONG).show();
-            setUi();
-           // this.callDetailsList=new DatabaseManager(this).getAllDetails();
-            rAdapter.notifyDataSetChanged();
+            if(checkResume==false) {
+                setUi();
+                // this.callDetailsList=new DatabaseManager(this).getAllDetails();
+                rAdapter.notifyDataSetChanged();
+            }
         }
+    }
+
+    protected void onPause()
+    {
+        super.onPause();
+        SharedPreferences pref3=PreferenceManager.getDefaultSharedPreferences(this);
+        if(pref3.getBoolean("pauseStateVLC",false)) {
+            checkResume = true;
+            pref3.edit().putBoolean("pauseStateVLC",false).apply();
+        }
+        else
+            checkResume=false;
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.mainmenu,menu);
         MenuItem item=menu.findItem(R.id.mySwitch);
-        item.setActionView(R.layout.switch_layout);
+
+        View view = getLayoutInflater().inflate(R.layout.switch_layout,null,false) ;
+
+        final SharedPreferences pref1= PreferenceManager.getDefaultSharedPreferences(this);
+
+        SwitchCompat switchCompat = (SwitchCompat) view.findViewById(R.id.switchCheck);
+        switchCompat.setChecked(pref1.getBoolean("switchOn",true));
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    Log.d("Switch", "onCheckedChanged: " +isChecked);
+                    Toast.makeText(getApplicationContext(), "Call Recorder ON", Toast.LENGTH_LONG).show();
+                    pref1.edit().putBoolean("switchOn",isChecked).apply();
+                }else{
+                    Log.d("Switch", "onCheckedChanged: " +isChecked);
+                    Toast.makeText(getApplicationContext(), "Call Recorder OFF", Toast.LENGTH_LONG).show();
+                    pref1.edit().putBoolean("switchOn",isChecked).apply();
+                }
+            }
+        });
+        item.setActionView(view);
         return true;
     }
 

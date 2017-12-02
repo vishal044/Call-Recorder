@@ -25,6 +25,7 @@ SQLite database is used for saving the list of phone number, date and time which
 Singleton Class is implemented to the database handler.
 
 #### Broadcast Receiver
+A receiver class is made to handle the broadcasts which is registered in the manifest.
 The application receives broadcasts on particularly 3 events when phone is :
 1. "Ringing".
 2. "Picked up"
@@ -33,4 +34,4 @@ The application receives broadcasts on particularly 3 events when phone is :
 #### Player
 On clicking a call log, a menu pops up giving option to the user, to chose from various media payers on device.
 
-A receiver class is made to handle the broadcasts which is registered in the manifest.
+

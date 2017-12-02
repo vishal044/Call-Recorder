@@ -11,6 +11,7 @@
 
 #### Compatibility
 The application is fully compatible till android 6. Some audio glitches can occur in higher android versions due to restrictions on accessing the audio stream of the other end in higher android versions.
+Android 7 compatible app will come out soon.
 
 #### Permissions
 Runtime permissions are implemented in code for following permissions

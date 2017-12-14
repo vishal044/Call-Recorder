@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+
+import static android.support.v4.content.FileProvider.getUriForFile;
 
 /**
  * Created by VS00481543 on 03-11-2017.
@@ -55,11 +58,14 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
 
                     Toast.makeText(context, "Clicked on " + number, Toast.LENGTH_SHORT).show();
 
-                    String path = Environment.getExternalStorageDirectory() + "/My Records/" + dates + "/" + number + "_" + times + ".mp4";
-                    Uri uri = Uri.parse(path);
+                    String path = Environment.getExternalStorageDirectory() + "/My Records/" + dates + "/" + number + "_" + times + ".mp4"  ;
+                    Log.d("path", "onClick: "+path);
+//                    Uri uri = Uri.parse(path);
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     File file = new File(path);
-                    intent.setDataAndType(Uri.fromFile(file), "audio/*");
+//                    intent.setDataAndType(Uri.fromFile(file), "audio/*");
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.setDataAndType(getUriForFile(context,"com.example.vs00481543.phonecallrecorder",file), "audio/*");
                     context.startActivity(intent);
 
                     pref.edit().putBoolean("pauseStateVLC",true).apply();
@@ -173,7 +179,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         // String checkDate=pref.getString("date","");
 
         try {
-            if (cd.getDate1().equalsIgnoreCase(callDetails.get(position - 1).getDate1())) {
+            if (position!=0 && cd.getDate1().equalsIgnoreCase(callDetails.get(position - 1).getDate1())) {
                 checkDate = dt;
                 //pref.edit().putString("date",dt).apply();
                 Log.d("Adapter", "getItemViewType: in if condition" + pref.getString("date", ""));

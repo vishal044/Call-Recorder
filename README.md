@@ -34,5 +34,6 @@ The application receives broadcasts on particularly 3 events when phone is :
 
 #### Player
 On clicking a call log, a menu pops up giving option to the user, to chose from various media payers on device.
+FileReader class is used to give the access of mp4 file to music players on device.
 
 
